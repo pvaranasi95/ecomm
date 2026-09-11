@@ -1,9 +1,10 @@
 pipeline {
   agent any
   stages {
-    stage('Test') {
+    stage('Check Diff') {
       steps {
-        echo "Hello world"
+        echo "git diff --name-only origin/master...HEAD > file.txt"
+        cat file.txt
       }
     }
   }
