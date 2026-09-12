@@ -20,7 +20,8 @@ pipeline {
              find ./build/ -type d -mindepth 1 | awk -F '/' {'print $3'} > file1.txt
              while read -r file1
              do
-               mv ./build/$file1 .
+               rm -rf $file1
+               cp ./build/$file1 .
                zip -r ./$file1.zip ./$file1
              done < file1.txt
                
