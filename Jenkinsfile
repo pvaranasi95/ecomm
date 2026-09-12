@@ -35,7 +35,7 @@ pipeline {
           steps {
            sh '''
                     rm -rf ./build/
-                    find . -type f -name "*.zip" | awk -F '/' {'print $1'} > folder.txt
+                    find . -type f -name "*.zip" > folder.txt
                     while read -r name
                     do
                      echo "Pusblishing to Artifactory"     
