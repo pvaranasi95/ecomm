@@ -15,9 +15,10 @@ pipeline {
              while read -r file
              do
                cp --parents $file ./build/
-               folder=$(awk -F '/' {'print $1'} $file)
-               zip -r $folder.zip ./build/$folder
+               folder=$(find ./build/ -type d)
+               zip -r ./build/$folder.zip ./build/$folder 
              done < file.txt
+               
         '''
       }
     }
