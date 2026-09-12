@@ -31,11 +31,15 @@ pipeline {
                     ls -ltr ./build/*.zip
                     cp ./build/*.zip .
                     rm -rf ./build/
-                    echo "Pusblishing to Artifactory"     
-                    curl -X PUT \
+                    find . -type f -name "*.zip" | awk -F '/' {'print $2'} > folder.txt
+                    while read -r name
+                    do
+                     echo "Pusblishing to Artifactory"     
+                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
-                        --upload-file "${folder}.zip" \
-                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/${folder}.zip"
+                        --upload-file "$name.zip" \
+                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/$name.zip"
+                   done < folder.txt
         '''
     }
 }
