@@ -15,6 +15,8 @@ pipeline {
              while read -r file
              do
                cp --parents $file ./build/
+               folder=$(awk {'print $1'} $file
+               zip -r $folder.zip ./build/$folder
              done < file.txt
         '''
       }
@@ -25,20 +27,16 @@ pipeline {
     }
           steps {
            sh '''
-            while read -r line
-            do
-                source="${line#source=}"
-                if grep -Fq "$source" file.txt
-                 then
-                    echo "Source found"
-                    zip -r "${source}.zip" "./build/${source}"
+                    ls -ltr ./build/*.zip
+                    cp ./build/*.zip .
                     echo "Pusblishing to Artifactory"
+                    while read -r file
+                    do
+                      
                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
-                        --upload-file "${source}.zip" \
-                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/${source}.zip"
-                fi
-            done < artifactory.properties
+                        --upload-file "*.zip" \
+                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/"
         '''
     }
 }
