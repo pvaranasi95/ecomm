@@ -10,14 +10,11 @@ pipeline {
     }
     stage('Package') {
       steps {
-        sh "mkdir -p build"
         sh '''
              while read -r file
              do
-               cp $file ./build
+               cp --parents $file .
              done < file.txt
-            ls -ltr ./build 
-            zip -r build.zip ./build
         '''
       }
     }
@@ -25,15 +22,25 @@ pipeline {
         environment {
         ARTIFACTORY_CRED = credentials('Jfrog_Artifactory')
     }
-      steps {
-        sh '''
-          curl -X PUT \
-         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
-         --upload-file "./build.zip" \
-         "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/build.zip"
-     '''
-      }
+          steps {
+           sh '''
+            while read -r line
+            do
+                source="${line#source=}"
+
+                if grep -Fxq "$source" file.txt
+                 then
+                    zip -r "${source}.zip" "./${source}"
+
+                    curl -X PUT \
+                        -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
+                        --upload-file "${source}.zip" \
+                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/${source}.zip"
+                fi
+            done < artifactory.properties
+        '''
     }
+}
     stage('clean ws') {
       steps {
         cleanWs()
