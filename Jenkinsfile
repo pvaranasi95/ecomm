@@ -30,6 +30,7 @@ pipeline {
            sh '''
                     ls -ltr ./build/*.zip
                     cp ./build/*.zip .
+                    rm -rf ./build/
                     echo "Pusblishing to Artifactory"     
                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
