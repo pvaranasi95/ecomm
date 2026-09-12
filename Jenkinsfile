@@ -11,6 +11,7 @@ pipeline {
     stage('Package') {
       steps {
         sh '''
+             mkdir -p build
              while read -r file
              do
                cp --parents $file ./build/
