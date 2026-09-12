@@ -29,7 +29,7 @@ pipeline {
             do
                 source="${line#source=}"
 
-                if grep -Fxq "$source" file.txt
+                if grep -F "$source" file.txt
                  then
                     zip -r "${source}.zip" "./build/${source}"
 
