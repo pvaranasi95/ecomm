@@ -16,8 +16,12 @@ pipeline {
              do
                cp --parents $file ./build/ 
              done < file.txt
-             folder=$(find ./build/ -type d -mindepth 1 | awk -F '/' {'print $3'})
-               zip -r ./build/$folder.zip ./build/$folder
+             
+             find ./build/ -type d -mindepth 1 | awk -F '/' {'print $3'} > file1.txt
+             while read -r file1
+             do
+               zip -r ./build/$file1.zip ./build/$file1
+             done < file1.txt
                
         '''
       }
