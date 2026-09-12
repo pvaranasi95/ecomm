@@ -29,10 +29,7 @@ pipeline {
            sh '''
                     ls -ltr ./build/*.zip
                     cp ./build/*.zip .
-                    echo "Pusblishing to Artifactory"
-                    while read -r file
-                    do
-                      
+                    echo "Pusblishing to Artifactory"     
                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
                         --upload-file "*.zip" \
