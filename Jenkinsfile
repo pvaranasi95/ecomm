@@ -28,8 +28,7 @@ pipeline {
             while read -r line
             do
                 source="${line#source=}"
-                grep -F "$source" file.txt
-                if [ echo $? -eq 0 ];
+                if grep -Fq "$source" file.txt
                  then
                     echo "Source found"
                     zip -r "${source}.zip" "./build/${source}"
