@@ -20,7 +20,7 @@ pipeline {
              find ./build/ -type d -mindepth 1 | awk -F '/' {'print $3'} > file1.txt
              while read -r file1
              do
-               zip -r ./build/$file1.zip ./build/$file1
+               zip -r ./$file1.zip ./build/$file1
              done < file1.txt
                
         '''
@@ -32,10 +32,8 @@ pipeline {
     }
           steps {
            sh '''
-                    ls -ltr ./build/*.zip
-                    cp ./build/*.zip .
                     rm -rf ./build/
-                    find . -type f -name "*.zip" | awk -F '/' {'print $2'} > folder.txt
+                    find . -type f -name "*.zip" | awk -F '/' {'print $1'} > folder.txt
                     while read -r name
                     do
                      echo "Pusblishing to Artifactory"     
