@@ -14,10 +14,10 @@ pipeline {
              mkdir -p build
              while read -r file
              do
-               cp --parents $file ./build/
-               folder=$(find ./build/ -type d -mindepth 1)
-               zip -r ./build/$folder.zip ./build/$folder 
+               cp --parents $file ./build/ 
              done < file.txt
+             folder=$(find ./build/ -type d -mindepth 1)
+               zip -r ./build/$folder.zip ./build/$folder
                
         '''
       }
