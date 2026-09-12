@@ -37,8 +37,8 @@ pipeline {
                      echo "Pusblishing to Artifactory"     
                      curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
-                        --upload-file "$name.zip" \
-                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/$name.zip"
+                        --upload-file "$name" \
+                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/$name"
                    done < folder.txt
         '''
     }
