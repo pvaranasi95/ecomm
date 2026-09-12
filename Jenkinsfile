@@ -13,7 +13,7 @@ pipeline {
         sh '''
              while read -r file
              do
-               cp --parents $file .
+               cp --parents $file ./build/
              done < file.txt
         '''
       }
@@ -30,7 +30,7 @@ pipeline {
 
                 if grep -Fxq "$source" file.txt
                  then
-                    zip -r "${source}.zip" "./${source}"
+                    zip -r "${source}.zip" "./build/${source}"
 
                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
