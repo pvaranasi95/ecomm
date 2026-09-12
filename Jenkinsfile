@@ -21,7 +21,7 @@ pipeline {
              while read -r file1
              do
                rm -rf $file1
-               cp ./build/$file1 .
+               cp -r ./build/$file1 .
                zip -r ./$file1.zip ./$file1
              done < file1.txt
                
