@@ -28,11 +28,12 @@ pipeline {
             while read -r line
             do
                 source="${line#source=}"
-
-                if grep -F "$source" file.txt
+                grep -F "$source" file.txt
+                if [ echo $? -eq 0 ];
                  then
+                    echo "Source found"
                     zip -r "${source}.zip" "./build/${source}"
-
+                    echo "Pusblishing to Artifactory"
                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
                         --upload-file "${source}.zip" \
