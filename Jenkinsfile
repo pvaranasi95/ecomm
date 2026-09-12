@@ -15,7 +15,7 @@ pipeline {
              while read -r file
              do
                cp --parents $file ./build/
-               folder=$(find ./build/ -type d)
+               folder=$(find ./build/ -type d -mindepth 1)
                zip -r ./build/$folder.zip ./build/$folder 
              done < file.txt
                
