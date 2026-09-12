@@ -16,7 +16,7 @@ pipeline {
              do
                cp --parents $file ./build/ 
              done < file.txt
-             folder=$(find ./build/ -type d -mindepth 1)
+             folder=$(find ./build/ -type d -mindepth 1 | awk -F '/' {'print $3'})
                zip -r ./build/$folder.zip ./build/$folder
                
         '''
