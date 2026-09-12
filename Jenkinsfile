@@ -11,10 +11,18 @@ pipeline {
     stage('Package') {
       steps {
         sh '''
+             mkdir -p build
              while read -r file
              do
-               cp --parents $file .
+               cp --parents $file ./build/ 
              done < file.txt
+             
+             find ./build/ -type d -mindepth 1 | awk -F '/' {'print $3'} > file1.txt
+             while read -r file1
+             do
+               zip -r ./build/$file1.zip ./build/$file1
+             done < file1.txt
+               
         '''
       }
     }
@@ -24,20 +32,18 @@ pipeline {
     }
           steps {
            sh '''
-            while read -r line
-            do
-                source="${line#source=}"
-
-                if grep -Fxq "$source" file.txt
-                 then
-                    zip -r "${source}.zip" "./${source}"
-
-                    curl -X PUT \
+                    ls -ltr ./build/*.zip
+                    cp ./build/*.zip .
+                    rm -rf ./build/
+                    find . -type f -name "*.zip" | awk -F '/' {'print $2'} > folder.txt
+                    while read -r name
+                    do
+                     echo "Pusblishing to Artifactory"     
+                     curl -X PUT \
                         -u "$ARTIFACTORY_CRED_USR:$ARTIFACTORY_CRED_PSW" \
-                        --upload-file "${source}.zip" \
-                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/${source}.zip"
-                fi
-            done < artifactory.properties
+                        --upload-file "$name" \
+                        "http://host.docker.internal:8082/artifactory/DevOps/${JOB_NAME}/${BUILD_NUMBER}/$name"
+                   done < folder.txt
         '''
     }
 }
